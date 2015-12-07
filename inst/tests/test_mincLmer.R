@@ -1,7 +1,9 @@
 context("mincLmer - basic test")
 
-gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
-maskfile <- "/tmp/rminctestdata/testminc-mask.mnc"
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
+
+gf <- read.csv(sprintf("%s/test_data_set.csv", dataPath))
+maskfile <- sprintf("%s/testminc-mask.mnc", dataPath)
 
 # Add a test to check if lme4 is installed.
 # Do this through a tryCatch block

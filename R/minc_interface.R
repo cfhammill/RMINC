@@ -3039,23 +3039,17 @@ runRMINCTestbed <- function(verboseTest = FALSE) {
   # Make sure environment is clear
   #rm(list=ls())
   
-  if(!file.exists("/tmp/rminctestdata/")){
-    system('mkdir /tmp/rminctestdata')
-  }
+  dataPath <- getRMINCTestData()
   
-
-  # Download Tarball from Wiki
-  if(!file.exists("/tmp/rminctestdata/rminctestdata.tar.gz")){
-    system("wget -O /tmp/rminctestdata/rminctestdata.tar.gz --no-check-certificate https://wiki.phenogenomics.ca/download/attachments/1654/rminctestdata.tar.gz")
-  }
-  # Untar
-  system('tar -xf /tmp/rminctestdata/rminctestdata.tar.gz -C /tmp/')
+  testEnv <- new.env()
+  testEnv$dataPath <- dataPath
+  
   library(testthat)
 
   # Run Tests
   rmincPath = find.package("RMINC")
   cat("\n\nRunning tests in: ", paste(rmincPath,"/","tests/",sep=""), "\n\n\n")
-  test_dir(paste(rmincPath,"/","tests/",sep=""))
+  test_dir(file.path(rmincPath, "tests/"), env = testEnv)
   
   cat("\n*********************************************\n")
   cat("The RMINC test bed finished running all tests\n")
@@ -3068,15 +3062,35 @@ runRMINCTestbed <- function(verboseTest = FALSE) {
 
 # Get Test Data (i.e. for running examples from man pages)
 getRMINCTestData <- function() {
-
-  system('mkdir /tmp/rminctestdata')
-
-  # Download Tarball from Wiki
-  system("wget -O /tmp/rminctestdata/rminctestdata.tar.gz --no-check-certificate https://wiki.phenogenomics.ca/download/attachments/1654/rminctestdata.tar.gz")
-
-  # Untar
-  system('tar -xf /tmp/rminctestdata/rminctestdata.tar.gz -C /tmp/')
   
+  tmpDir <- tempdir() #base temp dir for r
+  dataPath <- file.path(tmpDir, "testData") #where to download the tar
+  dir.create(dataPath, showWarnings = FALSE) #make if silence warnings if it exists
+  unpackedDataPath <- file.path(tmpDir, "rminctestdata") #where the data unpacks
+  
+  # Download Tarball from Wiki
+  if(!dir.exists(unpackedDataPath)){
+    system2("wget", c(
+      "-O",
+      file.path(dataPath, "rminctestdata.tar.gz"),
+      "--no-check certificate",
+      "https://wiki.mouseimaging.ca/download/attachments/1654/rminctestdata.tar.gz"
+    )) 
+  }
+    
+  # Untar
+  system(
+    sprintf("tar -xf %s/rminctestdata.tar.gz -C %s",
+            dataPath, tmpDir))
+  
+  #Remove hardcoded paths in test files
+  system(
+    sprintf("sed -i \"s:/tmp/rminctestdata:%s:g\" %s",
+         unpackedDataPath,
+         file.path(unpackedDataPath, "test_data_set.csv")))
+  
+  #Return path to where data was unpacked
+  return(unpackedDataPath)
 }
 
 # Run function with/without output silenced; used in test bed

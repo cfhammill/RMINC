@@ -1,17 +1,19 @@
 context("vertexLm")
 
-gftest <- read.csv('/tmp/rminctestdata/subject.csv')
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
+
+gftest <- read.csv(sprintf('%s/subject.csv', dataPath))
 subjectFile = matrix(data=NA,nrow=10,1)
-subjectFile[1,1]  = '/tmp/rminctestdata/vertex2.txt'
-subjectFile[2,1]  = '/tmp/rminctestdata/vertex3.txt'
-subjectFile[3,1]  = '/tmp/rminctestdata/vertex4.txt'
-subjectFile[4,1]  = '/tmp/rminctestdata/vertex3.txt'
-subjectFile[5,1]  = '/tmp/rminctestdata/vertex1.txt'
-subjectFile[6,1]  = '/tmp/rminctestdata/vertex2.txt'
-subjectFile[7,1]  = '/tmp/rminctestdata/vertex4.txt'
-subjectFile[8,1]  = '/tmp/rminctestdata/vertex2.txt'
-subjectFile[9,1]  = '/tmp/rminctestdata/vertex3.txt'
-subjectFile[10,1] = '/tmp/rminctestdata/vertex1.txt'
+subjectFile[1,1]  = sprintf('%s/vertex2.txt', dataPath)
+subjectFile[2,1]  = sprintf('%s/vertex3.txt', dataPath)
+subjectFile[3,1]  = sprintf('%s/vertex4.txt', dataPath)
+subjectFile[4,1]  = sprintf('%s/vertex3.txt', dataPath)
+subjectFile[5,1]  = sprintf('%s/vertex1.txt', dataPath)
+subjectFile[6,1]  = sprintf('%s/vertex2.txt', dataPath)
+subjectFile[7,1]  = sprintf('%s/vertex4.txt', dataPath)
+subjectFile[8,1]  = sprintf('%s/vertex2.txt', dataPath)
+subjectFile[9,1]  = sprintf('%s/vertex3.txt', dataPath)
+subjectFile[10,1] = sprintf('%s/vertex1.txt', dataPath)
 gftest$testFilesLeft <- (subjectFile)
 
 rmincLm <- verboseRun("vertexLm(testFilesLeft ~ Age,gftest)",getOption("verbose"))

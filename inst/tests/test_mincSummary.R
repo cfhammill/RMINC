@@ -1,8 +1,10 @@
 #testthat test script for functions that call mincSummary
+
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
 # mincMean, mincSd, mincVar, mincSum 
 context("mincSummary (Mean, Sd, Var, Sum,t-test,correlation,wilcoxon)")
 
-gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
+gf <- read.csv(sprintf("%s/minc_summary_test_data.csv", dataPath)) 
 gf$vox <- mincGetVoxel(gf$jacobians_0.2, 0, 0, 0)
 
 #Calculate mean, sd, variance, and sum 

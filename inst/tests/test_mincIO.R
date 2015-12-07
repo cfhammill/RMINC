@@ -1,22 +1,26 @@
-#
-#
-#
 context("MINC I/O reading")
+
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
 
 # silence the output of mincLm, in order to make the test output information is more clear to read
 
-testfile <- verboseRun("mincGetVolume(\"/tmp/rminctestdata/brain_cut_out.mnc\")",getOption("verbose"))
+testCommand <- sprintf("mincGetVolume(\"%s/brain_cut_out.mnc\")", dataPath)
+print(testCommand)
+testfile <- verboseRun(testCommand, getOption("verbose"))
 
-mincextract_output_voxel_0_0_0 <- as.numeric(system("mincextract  -start 0,0,0 -count 1,1,1 /tmp/rminctestdata/brain_cut_out.mnc", intern=TRUE))
+testCommand <- sprintf("mincextract  -start 0,0,0 -count 1,1,1 %s/brain_cut_out.mnc", dataPath)
+
+mincextract_output_voxel_0_0_0 <- 
+  as.numeric(system(testCommand, intern=TRUE))
 
 
-mask_10_10_10 <- verboseRun("mincGetVolume(\"/tmp/rminctestdata/mask_at_voxel_10_10_10.mnc\")",getOption("verbose"))
-mask_10_31_33 <- verboseRun("mincGetVolume(\"/tmp/rminctestdata/mask_at_voxel_10_31_33.mnc\")",getOption("verbose"))
-mask_37_40_28 <- verboseRun("mincGetVolume(\"/tmp/rminctestdata/mask_at_voxel_37_40_28.mnc\")",getOption("verbose"))
+mask_10_10_10 <- verboseRun(sprintf("mincGetVolume(\"%s/mask_at_voxel_10_10_10.mnc\")", dataPath),getOption("verbose"))
+mask_10_31_33 <- verboseRun(sprintf("mincGetVolume(\"%s/mask_at_voxel_10_31_33.mnc\")", dataPath),getOption("verbose"))
+mask_37_40_28 <- verboseRun(sprintf("mincGetVolume(\"%s/mask_at_voxel_37_40_28.mnc\")", dataPath),getOption("verbose"))
 
-mincextract_output_voxel_10_10_10 <- as.numeric(system("mincextract  -start 10,10,10 -count 1,1,1 /tmp/rminctestdata/brain_cut_out.mnc", intern=TRUE))
-mincextract_output_voxel_10_31_33 <- as.numeric(system("mincextract  -start 10,31,33 -count 1,1,1 /tmp/rminctestdata/brain_cut_out.mnc", intern=TRUE))
-mincextract_output_voxel_37_40_28 <- as.numeric(system("mincextract  -start 37,40,28 -count 1,1,1 /tmp/rminctestdata/brain_cut_out.mnc", intern=TRUE))
+mincextract_output_voxel_10_10_10 <- as.numeric(system("mincextract  -start 10,10,10 -count 1,1,1 %s/brain_cut_out.mnc", intern=TRUE))
+mincextract_output_voxel_10_31_33 <- as.numeric(system("mincextract  -start 10,31,33 -count 1,1,1 %s/brain_cut_out.mnc", intern=TRUE))
+mincextract_output_voxel_37_40_28 <- as.numeric(system("mincextract  -start 37,40,28 -count 1,1,1 %s/brain_cut_out.mnc", intern=TRUE))
 
 test_that("mincGetVolume extracts the same value as mincextract", {
     expect_that(testfile[1], equals(mincextract_output_voxel_0_0_0))
@@ -71,30 +75,30 @@ system("rm -f /tmp/write_out_of_RMINC_test_bed_MINC_IO.mnc")
 #
 context("MINC I/O determine volume of segmentation - anatGetAll using jacobians")
 
-filenames <- read.csv("/tmp/rminctestdata/filenames.csv")
-volumes <- anatGetAll(filenames=filenames$absolute_jacobian, atlas="/tmp/rminctestdata/test_segmentation.mnc", method="jacobians",defs="/tmp/rminctestdata/test_defs.csv")
+filenames <- read.csv(sprintf("%s/filenames.csv", dataPath))
+volumes <- anatGetAll(filenames=filenames$absolute_jacobian, atlas=sprintf("%s/test_segmentation.mnc", dataPath), method="jacobians",defs=sprintf("%s/test_defs.csv", dataPath))
 
 # calculate the volume of a structure using minc tools:
 # 1) get the exponent of the absolute jacobian file (these are log values)
 # 2) sum over a certain area
 # 3) multiply that by the voxel size
 
-system("mincmath -clobber -quiet -exp /tmp/rminctestdata/absolute_jacobian_file_1.mnc /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc")
-system("mincmath -clobber -quiet -exp /tmp/rminctestdata/absolute_jacobian_file_2.mnc /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc") 
-system("mincmath -clobber -quiet -exp /tmp/rminctestdata/absolute_jacobian_file_3.mnc /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc") 
+system("mincmath -clobber -quiet -exp %s/absolute_jacobian_file_1.mnc %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc")
+system("mincmath -clobber -quiet -exp %s/absolute_jacobian_file_2.mnc %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc") 
+system("mincmath -clobber -quiet -exp %s/absolute_jacobian_file_3.mnc %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc") 
 
 # left (180) and right (181) parieto-temporal lobe
-left_parieto_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 187 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
-left_parieto_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 187 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
-left_parieto_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 187 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
-right_parieto_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 181 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
-right_parieto_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 181 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
-right_parieto_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 181 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
+left_parieto_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 187 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
+left_parieto_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 187 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
+left_parieto_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 187 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
+right_parieto_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 181 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
+right_parieto_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 181 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
+right_parieto_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 181 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
 
 # pons (187) has no separate label for left and right 
-pons_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 250 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
-pons_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 250 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
-pons_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask /tmp/rminctestdata/test_segmentation.mnc  -mask_bin 250 /tmp/rminctestdata/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
+pons_sum_file_1 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 250 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_1_exponent.mnc", intern=TRUE))
+pons_sum_file_2 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 250 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_2_exponent.mnc", intern=TRUE))
+pons_sum_file_3 <- as.numeric(system("mincstats -quiet -sum -mask %s/test_segmentation.mnc  -mask_bin 250 %s/RMINC_test_bed_MINC_IO_absolute_jacobian_file_3_exponent.mnc", intern=TRUE))
 
 voxel_volume <- 1
 
@@ -129,7 +133,7 @@ test_that("anatGetAll extracts the same value as a combination of mincmath and m
 #
 context("MINC I/O determine volume of segmentation - anatCombineStructures using jacobians")
 
-volumes_combined <- anatCombineStructures(vols=volumes, method="jacobians",defs="/tmp/rminctestdata/test_defs.csv")
+volumes_combined <- anatCombineStructures(vols=volumes, method="jacobians",defs=sprintf("%s/test_defs.csv", dataPath))
 
 test_that("anatGetAll extracts the same value as a combination of mincmath and mincstats", {
     expect_that(volumes_combined[, "Label27"][1], equals(left_parieto_volume_file_1 + right_parieto_volume_file_1, tolerance = 0.0001))

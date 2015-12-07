@@ -1,7 +1,8 @@
 context("mincApply")
 
-gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
 
+gf <- read.csv(sprintf("%s/test_data_set.csv", dataPath))
 
 mm <- verboseRun("mincMean(gf$jacobians_fixed_2)",getOption("verbose"))
 ma <- verboseRun("mincApply(gf$jacobians_fixed_2,quote(mean(x)))",getOption("verbose"))

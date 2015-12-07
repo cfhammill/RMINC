@@ -1,12 +1,20 @@
 context("civet.readAllCivetFiles")
 
-gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
-gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
-gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
+
+gf = read.csv(sprintf("%s/CIVET_TEST.csv", dataPath))
+gf = read.csv(sprintf("%s/CIVET_TEST.csv", dataPath))
+gf = civet.getAllFilenames(gf,"ID","TEST",sprintf("%s/CIVET", dataPath),"TRUE","1.1.12")
+gf = civet.getAllFilenames(gf,"ID","TEST",sprintf("%s/CIVET", dataPath),"TRUE","1.1.12")
+gf = civet.readAllCivetFiles(sprintf("%s/AAL.csv", dataPath),gf)
+gf = civet.readAllCivetFiles(sprintf("%s/AAL.csv", dataPath),gf)
 dataFile = gf$lobeThickness
-AALAtlas = read.csv("/tmp/rminctestdata/AAL.csv")
-verticesL = read.csv("/tmp/rminctestdata/AAL_atlas_left.txt",header = FALSE)
-verticesR = read.csv("/tmp/rminctestdata/AAL_atlas_right.txt",header = FALSE)
+AALAtlas = read.csv(sprintf("%s/AAL.csv", dataPath))
+AALAtlas = read.csv(sprintf("%s/AAL.csv", dataPath))
+verticesL = read.csv(sprintf("%s/AAL_atlas_left.txt", dataPath),header = FALSE)
+verticesL = read.csv(sprintf("%s/AAL_atlas_left.txt", dataPath),header = FALSE)
+verticesR = read.csv(sprintf("%s/AAL_atlas_right.txt", dataPath),header = FALSE)
+verticesR = read.csv(sprintf("%s/AAL_atlas_right.txt", dataPath),header = FALSE)
 reducedVertices = c(verticesL[0:40961,1],verticesR[0:40961,1])
 
 atlasIndex = pmatch(names(dataFile[1,1]),AALAtlas[,3])

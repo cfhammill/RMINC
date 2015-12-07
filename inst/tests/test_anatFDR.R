@@ -1,8 +1,10 @@
 context("anatFDR")
 
-gf <- read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
-gf <- civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
-gf <- civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
+if(!exists("dataPath")) dataPath <- "/tmp/rminctestdata/"
+
+gf <- read.csv(sprintf("%s/CIVET_TEST.csv", dataPath))
+gf <- civet.getAllFilenames(gf,"ID","TEST",sprintf("%s/CIVET", dataPath),"TRUE","1.1.12")
+gf <- civet.readAllCivetFiles(sprintf("%s/AAL.csv", dataPath),gf)
 
 rmincLm <- verboseRun("anatLm(~ Sex,gf,gf$lobeThickness)",getOption("verbose"))
 
