@@ -1,3 +1,21 @@
+mincGetTagFile <- function(filename) {
+  tags <- scan(filename, what="character")
+  # tag points begin after Points = line
+  beginIndex <- grep("Points", tags) + 2
+  endIndex <- length(tags)-1 # get rid of training ;
+  return(matrix(as.numeric(tags[beginIndex:endIndex]), ncol=7, byrow=T))
+}
+
+mincConvertTagToMincArrayCoordinates <- function(tags, filename) {
+  tags <- tags[,c(1:3,7)] # get rid of repeated coordinates
+  out <- matrix(ncol=ncol(tags), nrow=nrow(tags))
+  for (i in 1:nrow(tags)) {
+    out[i,3:1] <- mincConvertWorldToVoxel(filename, tags[i,1], tags[i,2], tags[i,3]) + 1
+  }
+  out[,4] <- tags[,4]
+  return(out)
+}
+
 # get the real value of one voxel from all files.
 mincGetVoxel <- function(filenames, v1, v2=NULL, v3=NULL) {
   num.files <- length(filenames)
@@ -133,6 +151,7 @@ mincGetVolume <- function(filename) {
   class(output) <- c("mincSingleDim", "numeric")
   attr(output, "filename") <- filename
   attr(output, "likeVolume") <- filename
+  attr(output, "sizes") <- sizes
   return(output)
 }
 
@@ -3031,9 +3050,22 @@ mincSelectRandomVoxels <- function(volumeFileName, nvoxels=50, convert=TRUE) {
   }
 }
 
-# Run Testbed
-runRMINCTestbed <- function(verboseTest = FALSE) {
-	
+#' @title Run Testbed
+#' @description Run the test bed to ensure all RMINC functions
+#' work on your system
+#' @param verboseTest
+#' Whether or not to verbosely print test output, default is
+#' to print simplified results
+#' @param purgeData whether to remove downloaded test files
+#' in /tmp/rminctestdata
+#' @param ... additional parameter for \link{testthat::test_dir}
+#' @return invisibly return the test results
+#' @export
+runRMINCTestbed <- function(..., verboseTest = FALSE, purgeData = TRUE) {
+  
+	if(!require(testthat)){
+	  stop("Sorry, you need to install testthat to run the testbed")
+	}
 
   options(verbose = verboseTest)
   # Make sure environment is clear
@@ -3043,21 +3075,23 @@ runRMINCTestbed <- function(verboseTest = FALSE) {
   
   testEnv <- new.env()
   testEnv$dataPath <- dataPath
-  
-  library(testthat)
 
   # Run Tests
   rmincPath = find.package("RMINC")
   cat("\n\nRunning tests in: ", paste(rmincPath,"/","tests/",sep=""), "\n\n\n")
-  test_dir(file.path(rmincPath, "tests/"), env = testEnv)
+
+  testReport <- test_dir(file.path(rmincPath, "tests/"), env = testEnv)
   
   cat("\n*********************************************\n")
   cat("The RMINC test bed finished running all tests\n")
   cat("*********************************************\n\n\n")
-  # Remove temp data, and downloaded files
-  cat("Removing temporary directory /tmp/rminctestdata\n")
-  system('rm -fr /tmp/rminctestdata')
   
+  if(purgeData){
+    cat("Removing temporary directory /tmp/rminctestdata\n")
+    system('rm -fr /tmp/rminctestdata')
+  }
+
+  return(testReport)
 }
 
 # Get Test Data (i.e. for running examples from man pages)
@@ -3106,5 +3140,5 @@ verboseRun <- function(expr,verbose,env = parent.frame()) {
 		output = with(env,eval(parse(text=expr)))
 		sink()
 	}
-	return(output)
+	return(invisible(output))
 }
