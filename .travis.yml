@@ -1,0 +1,17 @@
+language: r
+sudo: require
+
+# System dependencies
+before_install:
+ - sudo apt-get install libvtk5-dev
+ - sudo apt-get install python-dev
+ - sudo apt-get install python-vtk
+ - sudo apt-get install libssh2-1-dev
+ - sudo apt-get install libhdf5-7
+ - sudo apt-get install libhdf5-dev
+
+# Source/R installs
+install:
+  - sudo bash install_netcdf4.sh
+  - sudo bash install_minctoolkit.sh
+  - Rscript r_package_install.Rscript
