@@ -24,8 +24,10 @@ rminc.getDataClasses()
 \author{Jim Nikelski \email{nikelski@bic.mni.mcgill.ca}}
 
 \examples{
+\dontrun{
 dataClasses <- rminc.getDataClasses()
 print(dataClasses)
+}
 }
 
 \seealso{

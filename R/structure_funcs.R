@@ -159,11 +159,12 @@ print.anatMatrix <- function(x, ...) {
 #' nrows equal to the number of files.
 
 #' @seealso anatLm,anatCombineStructures
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData()
 #' filenames <- read.csv("/tmp/rminctestdata/filenames.csv")
 #' volumes <- anatGetAll(filenames=filenames$absolute_jacobian, atlas="/tmp/rminctestdata/test_segmentation.mnc", 
 #'                       method="jacobians",defs="/tmp/rminctestdata/test_defs.csv")
+#'}
 ###########################################################################################
 anatGetAll <- function(filenames, atlas, method="jacobians", defs=Sys.getenv("RMINC_LABEL_DEFINITIONS"), dropLabels=TRUE, side="both") {
   if(defs == ""){
@@ -239,12 +240,13 @@ anatGetAll <- function(filenames, atlas, method="jacobians", defs=Sys.getenv("RM
 #' @return A matrix with ncols equal to the number of collapsed labels
 
 #' @seealso anatLm,anatGetAll
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData()
 #' filenames <- read.csv("/tmp/rminctestdata/filenames.csv")
 #' volumes <- anatGetAll(filenames=filenames$absolute_jacobian, atlas="/tmp/rminctestdata/test_segmentation.mnc", 
 #'                       method="jacobians",defs="/tmp/rminctestdata/test_defs.csv")
 #' volumes_combined <- anatCombineStructures(vols=volumes, method="jacobians",defs="/tmp/rminctestdata/test_defs.csv")
+#' }
 ###########################################################################################
 anatCombineStructures <- function(vols, method="jacobians", defs=Sys.getenv("RMINC_LABEL_DEFINITIONS")) {
   if(defs == ""){
@@ -289,12 +291,13 @@ anatCombineStructures <- function(vols, method="jacobians", defs=Sys.getenv("RMI
 #' @param method The function which to apply [default mean]
 #' @return  out: The output will be a single vector containing as many
 #'          elements as there are regions in the input variable by the number of groupings
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' vm <- anatApply(gf$lobeThickness,gf$Primary.Diagnosis)
+#' }
 ###########################################################################################
 anatApply <- function(vols, grouping, method=mean) {
   ngroups <- length(levels(grouping))
@@ -318,12 +321,13 @@ anatApply <- function(vols, grouping, method=mean) {
 #' and t statistcs that can be passed directly into anatFDR. Additionally
 #' has the attributes for model,stat type and degrees of freedom.
 #' @seealso mincLm,anatLm,anatFDR 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' rmincLm= anatLm(~ Sex,gf,gf$lobeThickness); 
+#' }
 ###########################################################################################  
 anatLm <- function(formula, data, anat, subset=NULL) {
   
@@ -444,12 +448,13 @@ anatLm <- function(formula, data, anat, subset=NULL) {
 #' @return Returns an array with the F-statistic for each model specified by formula with the following attributes: model – design matrix
 #' 	, stat-type: type of statistic used, df – degrees of freedom of each statistic. 
 #' @seealso mincAnova,vertexAnova 
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
-#' rmincAnova = anatAnova(~ Sex,gf,gf$lobeThickness); 
+#' rmincAnova = anatAnova(~ Sex,gf,gf$lobeThickness);
+#' } 
 ###########################################################################################
 anatAnova <- function(formula, data=NULL, anat=NULL, subset=NULL) {
   # Create Model
@@ -524,12 +529,13 @@ anatFDR <- function(buffer, method="FDR") {
 #' @param anat anat structure.
 #' @return  out: The output will be a single vector containing as many
 #'          elements as there are regions in the input variable. 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' vm <- anatMean(gf$lobeThickness)
+#' }
 ###########################################################################################
 
 anatMean <- function(anat) {
@@ -558,12 +564,13 @@ anatSd <- function(anat) {
 #' argument, which has to be 'x'.
 #' @return  out: The output will be a single vector containing as many
 #'          elements as there are regions in the input variable. 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' vm <- anatApply(gf$lobeThickness,quote(mean(x)))
+#' }
 ###########################################################################################
 
 

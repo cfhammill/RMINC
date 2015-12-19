@@ -407,10 +407,11 @@ civet.getFilenameNonlinearTransform <- function(scanID, baseDir, civetVersion="1
 #' Currently only CIVET versions 1.1.9 and 1.1.12 are supported.
 #' @return gf is returned with CIVET filenames 
 #' @seealso civet.readAllCivetFiles
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
+#' }
 ###########################################################################################
 
 civet.getAllFilenames <- function(gf, idvar, prefix, basedir, append=TRUE, civetVersion="1.1.9") {
@@ -738,11 +739,12 @@ civet.organizeCivetTxtFilesVertex <- function(dataFiles) {
 #' \item{nativeRMStlink20mm:}{ As above, but for RMS tlink 20mm thicknesses}
 #' }
 #' @seealso  civet.getAllFilenames
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET", TRUE, "1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
+#' }
 ###########################################################################################
 civet.readAllCivetFiles = function(atlasFile,gf)
 {
@@ -1152,12 +1154,13 @@ write.table(roiObj,outputFileName,FALSE,TRUE," ","\n","NA",".",FALSE,FALSE)
 #' @details Create a .txt file that can be overlaid unto the model template (usually in the CIVET models directory)
 #' Currently only CIVET version 1.1.12 is supported.
 #' @seealso civet.CreateBrainViewFile
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData() 
 #' civet.CreateBrainViewROI("/tmp/rminctestdata/AAL.csv","/tmp/rminctestdata/AAL_atlas_left.txt","Left Insula")
 #' q()
 #' (The .txt file is written in the working directory and can be viewed via the command)
 #' brain-view2 $CIVET_DIR/models/surf_reg_model_left.obj ./LeftInsula.txt
+#' }
 ###########################################################################################
 civet.CreateBrainViewROI <- function(atlasFile,atlasVertices,region,civetVersion="1.1.12") {
 	

@@ -23,7 +23,6 @@ brainPlot <- function(anatomy, statistics, slice, limits=c(2,4)) {
 #' once dimensions are obtained from any libminc functions (which use C indexing)
 #'
 #' @return A matrix with 3 dimensions
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -33,6 +32,7 @@ brainPlot <- function(anatomy, statistics, slice, limits=c(2,4)) {
 #' vs <- mincLm(jacobians ~ genotype, gf)
 #' tvol <- mincArray(vs, 6)
 #' }
+#' @export
 mincArray <- function(volume, dimIndex=1) {
   # 1d file with no dimensions (such as the output of mincGetVolume)
   if (is.null(dim(volume))) {
@@ -340,14 +340,13 @@ mincImage <- function(volume, dimension=2, slice=NULL, low=NULL, high=NULL,
 #' @param dimension the dimension (from 1 to 3)
 #' @param slice the slice number
 #' @param ... other parameters to pass on to \code{\link{contour}}
-#'
-#' @export
-#'
+#' 
 #' @examples
 #' \dontrun{
 #' mincImage(mincArray(anatVol), slice=100, col=gray.colors(255))
 #' mincContour(mincArray(anatVol), slice=100, add=T, col=rainbow(2), levels=c(1000, 1400))
 #' }
+#' @export
 mincContour <- function(volume, dimension=2, slice=NULL, ...) {
   s <- getSlice(volume, slice, dimension)
   contour(s$slice, asp=s$asp, ...)

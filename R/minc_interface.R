@@ -134,9 +134,10 @@ mincConvertWorldToVoxel <- function(filename, v1, v2, v3) {
 #' be read.
 #' @return out Returns a vector of mincSingleDim class
 #' @seealso mincWriteVolume
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData()
 #' testfile <- mincGetVolume("/tmp/rminctestdata/brain_cut_out.mnc");
+#' }
 ###########################################################################################
 mincGetVolume <- function(filename) {
   mincFileCheck(filename)
@@ -229,7 +230,7 @@ print.mincQvals <- function(x, ...) {
 #' can be viewed or manipulated with the standard MINC tools
 #' @return A list with the parameters of the minc volume written
 #' @seealso mincWriteVolume,mincLm,mincFDR,mincMean,mincSd
-#' @examples
+#' @examples \dontrun{
 #' getRMINCTestData()
 #' # read the text file describing the dataset
 #' gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
@@ -237,6 +238,7 @@ print.mincQvals <- function(x, ...) {
 #' vs <- mincLm(gf$jacobians_fixed_2 ~ Sex, gf)
 #' # write the results to file
 #' mincWriteVolume(vs, "Fstat.mnc", "F-statistic")
+#' }
 ###########################################################################################
 mincWriteVolume <- function(buffer, ...) {
   UseMethod("mincWriteVolume")
@@ -367,13 +369,15 @@ f <- function(formula, data=NULL, subset=NULL, mask=NULL) {
 #' @return Returns an array with the F-statistic for each model specified by formula with the following attributes: model – design matrix, filenames – 
 #' 	minc file names input,dimensions,dimension names, stat-type: type of statistic used, df – degrees of freedom of each statistic. 
 #' @seealso mincWriteVolume,mincFDR,mincMean, mincSd
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' # read the text file describing the dataset
 #' gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
 #' # run an ANOVA at each voxel
 #' vs <- mincAnova(jacobians_fixed_2 ~ Sex, gf)
-###########################################################################################
+#' }
+######################################################
+#####################################
 
 mincAnova <- function(formula, data=NULL, subset=NULL, mask=NULL) {
   m <- match.call()
@@ -451,12 +455,13 @@ mincAnova <- function(formula, data=NULL, subset=NULL, mask=NULL) {
 #' @return mincLm returns a mincMultiDim object which contains a series of columns corresponding to the terms in the linear model. The first
 #' column is the F-statistic of the significance of the entire volume, the following columns contain the R-Squared term, the marginal t-statistics for each of the terms in the model along with their respective coefficients.
 #' @seealso mincWriteVolume,mincFDR,mincMean, mincSd
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' # read the text file describing the dataset
 #' gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
 #' # Compute a linear model at each voxel
 #' vs <- mincLm(jacobians_fixed_2 ~ Sex, gf)
+#' }
 ###########################################################################################
 mincLm <- function(formula, data=NULL,subset=NULL , mask=NULL, maskval=NULL) {
 
@@ -619,7 +624,7 @@ mincGetMask <- function(mask) {
 #'  which contains the 1, 5, 10, 15, and 20 percent false discovery rate
 #'  thresholds.
 #' @seealso mincWriteVolume,mincLm,mincWilcoxon or mincTtest 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' # read the text file describing the dataset
 #' gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
@@ -627,6 +632,7 @@ mincGetMask <- function(mask) {
 #' vs <- mincLm(jacobians_fixed_2 ~ Sex, gf)
 #' # compute the False Discovery Rate
 #' qvals <- mincFDR(vs)
+#' }
 ###########################################################################################
 mincFDR <- function(buffer, ...) {
   UseMethod("mincFDR")
@@ -672,8 +678,7 @@ mincFDRMask <- function(mask, buffer) {
 #' the ability to correct the p-values based on having run
 #' the parametric bootstrap first.
 #'
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' test <- mincLmer(jacobians ~ day + (1|mouse), gf, mask="/micehome/jlerch/R-tests/small-mask.mnc",REML=F)
 #' test2 <- mincLmer(jacobians ~ ns(day,2) + (1|mouse), gf, mask="/micehome/jlerch/R-tests/small-mask.mnc",REML=F)
 #' out <- mincLogLikRatio(test, test2)
@@ -1101,13 +1106,14 @@ mincFDR.mincMultiDim <- function(buffer, columns=NULL, mask=NULL, df=NULL,
 #'          grouping factor was specified then the output will be a
 #'          matrix consisiting of as many rows as there were voxels in
 #'          the files, and as many columns as there were groups.
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
 #' mm <- mincMean(gf$jacobians_0.2); 
 #' ms <- mincSd(gf$jacobians_0.2); 
 #' mv <- mincVar(gf$jacobians_0.2,gf$Strain); 
-#' ms2 <- mincSum(gf$jacobians_0.2,gf$Strain); 
+#' ms2 <- mincSum(gf$jacobians_0.2,gf$Strain);
+#' } 
 ###########################################################################################
 mincMean <- function(filenames, grouping=NULL, mask=NULL, maskval=NULL) {
   result <- mincSummary(filenames, grouping, mask, method="mean", maskval=maskval)
@@ -1140,10 +1146,11 @@ mincSd <- function(filenames, grouping=NULL, mask=NULL, maskval=NULL) {
 #' @param maskval The value with which to mask the data (data will masked +/- 0.5 around this value
 #' @return  The output will be a single vector containing as many
 #'          elements as there are voxels in the input files, with that voxel's t-statistic
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
-#' mtt <- mincTtest(gf$jacobians_0.2,gf$Strain); 
+#' mtt <- mincTtest(gf$jacobians_0.2,gf$Strain);
+#' } 
 ###########################################################################################
 mincTtest <- function(filenames, grouping, mask=NULL, maskval=NULL) {
   # the grouping for a t test should only contain 2 groups. Should 
@@ -1182,11 +1189,12 @@ mincTtest <- function(filenames, grouping, mask=NULL, maskval=NULL) {
 #' @param maskval The value with which to mask the data (data will masked +/- 0.5 around this value
 #' @return  The output will be a single vector containing as many
 #'          elements as there are voxels in the input files, with that voxel's t-statistic
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
 #' gf = gf[1:20,]
 #' mptt <- mincPairedTtest(gf$jacobians_0.2,gf$Strain)
+#' }
 ###########################################################################################
 mincPairedTtest <- function(filenames, grouping, mask=NULL, maskval=NULL) {
   # here, similarly to the t-test, there should be 2 groups in the data. However
@@ -1234,10 +1242,11 @@ mincPairedTtest <- function(filenames, grouping, mask=NULL, maskval=NULL) {
 #' @return  The output will be a single vector containing as many
 #' elements as there are voxels in the input files, with that voxel's correlation value (Pearson
 #' correlation coefficient)
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
 #' mc <- mincCorrelation(gf$jacobians_0.2,gf$Weight);
+#' }
 ###########################################################################################
 mincCorrelation <- function(filenames, grouping, mask=NULL, maskval=NULL) {
   result <- mincSummary(filenames, grouping, mask, method="correlation", maskval=maskval)
@@ -1256,10 +1265,11 @@ mincCorrelation <- function(filenames, grouping, mask=NULL, maskval=NULL) {
 #' elements as there are voxels in the input files, with that voxel's U value (lower one).
 #' The number of observations in each sample is also saved as an attribute(m and n) so the result
 #' can be passed into mincFDR.
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/minc_summary_test_data.csv") 
 #' mw <- mincWilcoxon(gf$jacobians_0.2,gf $Strain);
+#' }
 ###########################################################################################
 mincWilcoxon <- function(filenames, grouping, mask=NULL, maskval=NULL) {
   result <- mincSummary(filenames, grouping, mask, method="wilcoxon", maskval=maskval)
@@ -1728,7 +1738,7 @@ pMincApply <- function(filenames, function.string,
 #' to make writing it out with mincWriteVolume easier.
 
 #' @seealso mincWriteVolume,mincMean,mincSd,mincLm,mincAnova
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf <- read.csv("/tmp/rminctestdata/test_data_set.csv")
 #' ma <- mincApply(gf$jacobians_fixed_2,quote(mean(x))); 
@@ -1756,6 +1766,7 @@ pMincApply <- function(filenames, function.string,
 #' pout <- pMincApply(gf$jacobians_fixed_2, quote(testFunc(x)),modules=c("intel","openmpi","R/3.1.1"),workers = 4,method="pbs",global = c('gf','testFunc'))
 #' NOTE 1: On SCINET jobs are limited to 32*48 hours of cpu time
 #' NOTE 2: On SCINET the Rmpi library must be compiled for use with R 3.1.1
+#' }
 ###########################################################################################
 mincApply <- function(filenames, function.string, mask=NULL, maskval=NULL, reduce=FALSE) {
   if (is.null(maskval)) {
@@ -1915,12 +1926,13 @@ vertexTable <- function(filenames) {
 #' @return Returns an array with the F-statistic for each model specified by formula with the following attributes: model – design matrix, filenames – 
 #' 	vertex file names input, stat-type: type of statistic used,dimensions,dimension names, and df – degrees of freedom of each statistic. 
 #' @seealso mincAnova,anatAnova 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' result = vertexAnova(CIVETFILES$nativeRMStlink20mmleft~Primary.Diagnosis,gf) 
+#' }
 ###########################################################################################
 vertexAnova <- function(formula, data, subset=NULL) {
   # Create Model
@@ -1969,12 +1981,13 @@ vertexAnova <- function(formula, data, subset=NULL) {
 #' @return Returns an object containing the R-Squared value,beta coefficients, F 
 #' and t statistcs that can be passed directly into vertexFDR.
 #' @seealso mincLm,anatLm,vertexFDR 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' result = vertexLm(CIVETFILES$nativeRMStlink20mmleft~Primary.Diagnosis,gf) 
+#' }
 ###########################################################################################
 vertexLm <- function(formula, data, subset=NULL) {
 
@@ -2053,12 +2066,13 @@ vertexLm <- function(formula, data, subset=NULL) {
 #' argument, which has to be 'x'.
 #' @return  out: The output will be a single vector containing as many
 #'          elements as there are vertices in the input variable. 
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' vm <- vertexApply(gf$CIVETFILES$nativeRMStlink20mmleft,quote(mean(x)))
+#' }
 ###########################################################################################
 
 vertexApply <- function(filenames,function.string) 
@@ -2117,12 +2131,13 @@ vertexSd<- function(filenames)
 #' @param mean.stats mean vertex data that may also be written
 #' @param gf glim matrix that can be written to the header
 #' @return A file is generated with the vertex data and optional headers
-#' @examples 
+#' @examples \dontrun{ 
 #' getRMINCTestData() 
 #' gf = read.csv("/tmp/rminctestdata/CIVET_TEST.csv")
 #' gf = civet.getAllFilenames(gf,"ID","TEST","/tmp/rminctestdata/CIVET","TRUE","1.1.12")
 #' gf = civet.readAllCivetFiles("/tmp/rminctestdata/AAL.csv",gf)
 #' writeVertex(gf$nativeRMStlink20mm,"~/RMStlink20mm.txt",FALSE,NULL,NULL)
+#' }
 ###########################################################################################
 writeVertex <- function (vertexData, filename, headers = TRUE, mean.stats = NULL, 
     gf = NULL) 
@@ -2684,8 +2699,7 @@ mincLmer <- function(formula, data, mask=NULL, parallel=NULL,
 #' @seealso \code{\link{mincLmer}} for mixed effects modelling, \code{\link{mincFDR}}
 #' for multiple comparisons corrections.
 #'
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' vs <- mincLmer(filenames ~ age + sex + (age|id), data=gf, mask="mask.mnc")
 #' vs <- mincLmerEstimateDF(vs)
 #' qvals <- mincFDR(vs, mask=attr(vs, "mask"))
@@ -2850,8 +2864,7 @@ mincLmerOptimizeAndExtract <- function(x) {
 #' \code{\link{mincFDR}} for using the False Discovery Rate to correct for multiple comparisons,
 #' and \code{\link{mincWriteVolume}} for outputting the values to MINC files.
 #'
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' m1 <- mincLmer(filenames ~ age + sex + (age|id), data=gf, mask="mask.mnc", REML=F)
 #' m2 <- mincLmer(filenames ~ age + I(age^2) + sex + (age|id), data=gf, mask="mask.mnc", REML=F)
 #' m3 <- mincLmer(filenames ~ age + I(age^2) + I(age^3) + sex + (age|id), data=gf, mask="mask.mnc", REML=F)
@@ -3008,8 +3021,7 @@ mincLogLikRatioParametricBootstrap <- function(logLikOutput, selection="random",
 #'
 #' @return a vector of length 3 containing the MINC indices in volume dimension order
 #'
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' index <- mincVectorToVoxelCoordinates("filename.mnc", 345322)
 #' voxel <- mincGetVoxel(gf$filenames, index)
 #' }
