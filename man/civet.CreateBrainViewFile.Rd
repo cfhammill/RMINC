@@ -49,9 +49,11 @@ Daniel Cassel (daniel.cassel@sickkids.ca)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 gf = read.csv("~/SubjectTable.csv") 
 civet.getAllFilenames(gf,"ID","ABC123","~/CIVET","TRUE","1.1.12") 
 gf = civet.readAllCivetFiles("~/Atlases/AAL/AAL.csv",gf)
 civet.CreateBrainViewFile(gf$lobeThickness[1,],"/Atlases/AAL/AAL.csv","/Atlases/AAL/AAL_atlas_left.txt","leftLobeThickness.txt")
+}
 }
 

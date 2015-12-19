@@ -23,8 +23,10 @@ rminc.getDataTypes()
 \author{Jim Nikelski \email{nikelski@bic.mni.mcgill.ca}}
 
 \examples{
+\dontrun{
 dataTypes <- rminc.getDataTypes()
 print(dataTypes)
+}
 }
 
 \seealso{

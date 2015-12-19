@@ -33,11 +33,12 @@ rminc.convertVoxelToWorld(filename, voxCoords)
 
 \examples{
 \dontshow{
+\dontrun{
 # clear debug flag and get full volume pathname
 # ... dunno why zzz.R debug setting is not passed
     R_DEBUG_mincIO <- 0      
     volDir <- system.file("packageData/volumes", package="RMINC")
-}
+
 # set the xyz voxel coordinates
 ijkCoords <- c(10, 20, 30)
 
@@ -48,4 +49,4 @@ print(v305PET)
 # convert and show it
 xyzCoords <- rminc.convertVoxelToWorld(v305PET, ijkCoords)
 print(xyzCoords)
-}
+}}}
