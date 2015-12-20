@@ -5,23 +5,15 @@ r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-p
 
 # System dependencies
 before_install:
- - sudo apt-get install libvtk5-dev
- - sudo apt-get install python-dev
- - sudo apt-get install python-vtk
- - sudo apt-get install libssh2-1-dev
- - sudo apt-get install libhdf5-7
- - sudo apt-get install libhdf5-dev
- - sudo apt-get install libcurl4-openssl-dev
- - sudo apt-get install libxml2-dev
- - sudo apt-get install bison 
- - sudo apt-get install flex 
- - sudo apt-get install freeglut3 
- - sudo apt-get install freeglut3-dev 
- - sudo apt-get install libxi6 
- - sudo apt-get install libxi-dev 
- - sudo apt-get install libxmu6 
- - sudo apt-get install libxmu-dev 
- - sudo apt-get install libxmu-headers
+ - sudo apt-get install -y libvtk5-dev
+ - sudo apt-get install -y python-dev
+ - sudo apt-get install -y python-vtk
+ - sudo apt-get install -y libssh2-1-dev
+ - sudo apt-get install -y libhdf5-7
+ - sudo apt-get install -y libhdf5-dev
+ - sudo apt-get install -y libcurl4-openssl-dev
+ - sudo apt-get install -y libxml2-dev
+ - sudo apt-get install -y libminc-dev  
 
 #Git Binary installs
 r_binary_install:
@@ -35,6 +27,4 @@ r_github_packages:
 install:
   - Rscript -e "print(R.version)"
   - sudo bash install_netcdf4.sh
-  - sudo bash install_minctoolkit.sh
-  - sudo libtool --finish /usr/local/lib
   - Rscript r_package_install.Rscript
