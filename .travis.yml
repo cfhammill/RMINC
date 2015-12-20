@@ -13,6 +13,15 @@ before_install:
  - sudo apt-get install libhdf5-dev
  - sudo apt-get install libcurl4-openssl-dev
  - sudo apt-get install libxml2-dev
+ - sudo apt-get install bison 
+ - sudo apt-get install flex 
+ - sudo apt-get install freeglut3 
+ - sudo apt-get install freeglut3-dev 
+ - sudo apt-get install libxi6 
+ - sudo apt-get install libxi-dev 
+ - sudo apt-get install libxmu6 
+ - sudo apt-get install libxmu-dev 
+ - sudo apt-get install libxmu-headers
 
 #Git Binary installs
 r_binary_install:
