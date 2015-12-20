@@ -10,4 +10,4 @@ cmake .. &>/dev/null
 echo "  Making:"
 make &>/dev/null
 echo "  Installing:"
-make install &>/dev/null
+make install
