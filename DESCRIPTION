@@ -1,27 +1,22 @@
 Package: RMINC
 Version: 1.2.4.9
 Date: 2014-07-29
-Title: Package for reading and analyzing MINC2 files
+Title: Package for Reading and Analyzing MINC2 Files
 Author: Jason Lerch <jason@mouseimaging.ca>, Jim Nikelski
     <nikelski@bic.mni.mcgill.ca>
 Maintainer: Jason lerch <jason@mouseimaging.ca>
 Description: A package for reading and writing MINC2 files
     and running arbitrary R functions at every voxel of a set of files.
-Additional_repositories: http://bioconductor.org/packages/3.1/bioc
 Depends:
     R (>= 3.2),
 Imports:
     methods,
     lattice,
-    dplyr,
-    ggplot2,
-    testthat,
-    lme4
-Suggests:
-    qvalue
+    testthat
 License: BSD
 LazyLoad: yes
 OS_type: unix
+NeedsCompilation: yes
 SystemRequirements: 
 URL: 
     https://github.com/Mouse-Imaging-Centre/RMINC,

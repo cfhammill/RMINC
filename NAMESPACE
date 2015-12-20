@@ -315,8 +315,5 @@ import(
   grDevices,
   methods,
   grid,
-  lattice,
-  dplyr,
-  ggplot2,
-  lme4
+  lattice
 )
