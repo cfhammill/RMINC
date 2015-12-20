@@ -1,5 +1,7 @@
 language: r
 sudo: require
+cran: https://cran.rstudio.com/
+
 
 # System dependencies
 before_install:
