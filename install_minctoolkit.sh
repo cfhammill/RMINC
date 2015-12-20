@@ -8,6 +8,6 @@ cd build
 echo building minc-toolkit
 cmake .. &>/dev/null
 echo "  Making:"
-make &>/dev/null
+make > /dev/null
 echo "  Installing:"
 make install
