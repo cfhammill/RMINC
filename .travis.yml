@@ -36,4 +36,5 @@ install:
   - Rscript -e "print(R.version)"
   - sudo bash install_netcdf4.sh
   - sudo bash install_minctoolkit.sh
+  - sudo libtool --finish /usr/local/lib
   - Rscript r_package_install.Rscript
