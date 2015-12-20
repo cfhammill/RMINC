@@ -9,6 +9,7 @@ before_install:
  - sudo apt-get install libssh2-1-dev
  - sudo apt-get install libhdf5-7
  - sudo apt-get install libhdf5-dev
+ - sudo apt-get install r-cran-lme4
 
 # Source/R installs
 install:
