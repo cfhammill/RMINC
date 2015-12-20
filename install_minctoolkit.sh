@@ -6,7 +6,7 @@ cd minc-toolkit
 mkdir build 
 cd build
 echo building minc-toolkit
-cmake .. &>/dev/null
+cmake .. #&>/dev/null
 echo "  Making:"
 make > /dev/null
 echo "  Installing:"

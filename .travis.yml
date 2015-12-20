@@ -1,7 +1,7 @@
 language: r
 sudo: require
 cran: https://cran.rstudio.com/
-
+r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-path=$RMINC_BUILD_PATH"
 
 # System dependencies
 before_install:
