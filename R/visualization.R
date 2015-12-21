@@ -84,13 +84,19 @@ getSlice <- function(volume, slice, dimension) {
   return(list(slice=outs, asp=outa))
 }
 
-mincPlotSliceSeries <- function(anatomy, statistics, dimension=2,
-                                mfrow=c(4,5), # layout
-                                low=NULL, high=NULL, # stat thresholding
-                                anatLow=NULL, anatHigh=NULL, # background thresholding
-                                col=heat.colors(255), 
-                                begin=NULL, end=NULL, symmetric=F,
-                                legend=NULL, plottitle=NULL, indicatorLevels=c(900, 1200)) {
+mincPlotSliceSeries <- 
+  function(anatomy, statistics, dimension=2,
+           mfrow = c(4,5),                   # layout
+           low = NULL, high = NULL,          # stat thresholding
+           anatLow = NULL, anatHigh = NULL,  # anatomy thresholding
+           col = heat.colors(255), 
+           begin = 1,                        # first slice
+           end = dim(anatomy)[dimension] - 1,# last slice 
+           symmetric = F,
+           legend = NULL, 
+           plottitle = NULL, 
+           indicatorLevels = c(900, 1200)) {
+    
   opar <- par(no.readonly = TRUE) #remember old parameters ignoring readonlies
   nslices <- prod(mfrow)
   par(bg = "black")
@@ -114,9 +120,7 @@ mincPlotSliceSeries <- function(anatomy, statistics, dimension=2,
   
   # figure out location of slices
   d <- dim(anatomy)
-  if (is.null(begin)) { begin <- 1 }
-  if (is.null(end)) { end <- d[dimension]-1 }
-  else if (end < 0) { end <- d[dimension] + end }
+  if (end < 0) { end <- d[dimension] + end }
   slices <- ceiling(seq(begin, end, length=nslices))
   
   # force use of default colours if symmetric colours desired (for now)
@@ -181,7 +185,7 @@ mincPlotSliceSeries <- function(anatomy, statistics, dimension=2,
   par(opar)
 }
 
-getRangeFromHistogram <- function (volume, low, high) {
+getRangeFromHistogram <- function (volume, low = NULL, high = NULL) {
   
   if(is.null(low) || is.null(high)) hist_midpoints <- hist(volume, plot=F)$mids
   if (is.null(low)) { low <- hist_midpoints[5]}
