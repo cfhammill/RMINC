@@ -11,8 +11,7 @@ before_install:
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
  - sudo apt-get install -y libxml2-dev
- - sudo apt-get build-dep -y libminc-dev
- - sudo apt-get install -y libminc-dev  
+ - sudo apt-get install -fy libminc-dev  
 
 #Git Binary installs
 r_binary_install:
