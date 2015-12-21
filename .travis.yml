@@ -11,9 +11,6 @@ before_install:
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
  - sudo apt-get install -y libxml2-dev
- - sudo apt-get install -y libminc2-1
- - sudo apt-get install -y libhdf5-openmpi-dev
- - sudo apt-get install -y libminc-dev  
 
 #Git Binary installs
 r_binary_install:
@@ -27,4 +24,5 @@ r_github_packages:
 install:
   - Rscript -e "print(R.version)"
   - sudo bash install_netcdf4.sh
+  - sudo bash install_libminc.sh
   - Rscript r_package_install.Rscript
