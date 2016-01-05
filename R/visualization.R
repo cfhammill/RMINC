@@ -384,13 +384,13 @@ mincImage <- function(volume, dimension=2, slice=NULL,
     
     if(!add){
       plot.new()
-      plot.window(xlim = c(0, sliceDims[1]),
-                  ylim = c(0, sliceDims[2]))
+      plot.window(xlim = c(0, sliceDims[2]),
+                  ylim = c(0, sliceDims[1]))
     }
     
     rasterImage(colourizedSlice, 
-                xleft = 0, xright = sliceDims[1],
-                ytop = 0, sliceDims[2], 
+                xleft = 0, xright = sliceDims[2],
+                ytop = 0, ybottom = sliceDims[1], 
                 ...)
   }
   
