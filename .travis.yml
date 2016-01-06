@@ -10,9 +10,6 @@ before_install:
  - sudo apt-get install -y python-vtk
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
- - sudo apt-get install -y libxml2-dev
- - sudo apt-get install -y libhdf5-dev
- - sudo apt-get install -y libhdf5-serial-1.8.4
  - sudo apt-get install -y libhdf5-serial-dev
 
 #Git Binary installs
@@ -25,7 +22,5 @@ r_github_packages:
 
 # Source/R installs
 install:
-  - Rscript -e "print(R.version)"
-  - sudo bash install_netcdf4.sh
   - sudo bash install_libminc.sh
   - Rscript r_package_install.Rscript
