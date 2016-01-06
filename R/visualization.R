@@ -59,7 +59,7 @@ mincArray <- function(volume, dimIndex=1) {
     dim(outvol) <- c(sizes[3], sizes[2], sizes[1])
   }
   else {
-    error("Input needs to either have dimensions set, or have a sizes or likeVolume attribute")
+    stop("Input needs to either have dimensions set, or have a sizes or likeVolume attribute")
   }
   return(outvol)
 }
@@ -89,7 +89,9 @@ mincPlotSliceSeries <-
            mfrow = c(4,5),                   # layout
            low = NULL, high = NULL,          # stat thresholding
            anatLow = NULL, anatHigh = NULL,  # anatomy thresholding
-           col = heat.colors(255), 
+           col = ifelse(symmetric,
+                        heat.colors(255),
+                        colorRampPalette(c("red", "yellow"))(255)),
            begin = 1,                        # first slice
            end = dim(anatomy)[dimension] - 1,# last slice 
            symmetric = FALSE,
@@ -350,25 +352,25 @@ mincImage <- function(volume, dimension=2, slice=NULL,
                       ...) {
   s <- getSlice(volume, slice, dimension)
   # reverse means multiply scaling by -1
-  if (reverse) { m <- -1} else { m <- 1 }
+  if (reverse) { m <- -1 } else { m <- 1 }
   
-  if(!scale && underTransparent){
-    low_bound <- min(0, low)
-    s$slice[s$slice <= low_bound] <- NA 
-  }
+  imRange <- getRangeFromHistogram(volume, low, high)
+  s$slice <- scaleSlice(s$slice, imRange[1]*m, imRange[2]*m, 
+                        underTransparent=underTransparent)
   
-  if(scale){
-    imRange <- getRangeFromHistogram(volume, low, high)
-    s$slice <- scaleSlice(s$slice, imRange[1]*m, imRange[2]*m, underTransparent=underTransparent) 
+  sliceDims <- dim(s$slice)
+  
+  if(!add){
+    plot.new()
+    plot.window(xlim = c(0, sliceDims[1]),
+                ylim = c(0, sliceDims[2]))
   }
   
   if(!all(is.na(s$slice))){
     colourDepth <- length(col)
     
     scaledSlice <- 
-      (s$slice - low) / 
-      (high - low) * 
-      colourDepth
+      (s$slice - min(low,high)) / abs(high - low) * colourDepth
     
     colourizedSlice <- 
       vapply(scaledSlice,
@@ -380,17 +382,10 @@ mincImage <- function(volume, dimension=2, slice=NULL,
     
     dim(colourizedSlice) <- dim(scaledSlice)
     colourizedSlice <- t(colourizedSlice) #transpose for raster plotting
-    sliceDims <- dim(colourizedSlice)
-    
-    if(!add){
-      plot.new()
-      plot.window(xlim = c(0, sliceDims[2]),
-                  ylim = c(0, sliceDims[1]))
-    }
     
     rasterImage(colourizedSlice, 
-                xleft = 0, xright = sliceDims[2],
-                ytop = 0, ybottom = sliceDims[1], 
+                xleft = 0, xright = sliceDims[1],
+                ytop = 0, ybottom = sliceDims[2], 
                 ...)
   }
   
@@ -416,7 +411,8 @@ mincContour <- function(volume, dimension=2, slice=NULL, ...) {
   contour(s$slice, asp=s$asp, ...)
 }
 
-scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE) {
+scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE, 
+                       reverse = FALSE) {
   if (is.null(low)) {
     low <- quantile(slice, 0.5)
   }
@@ -424,6 +420,7 @@ scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE) {
     high <- quantile(slice, 0.7)
   }
   
+  # invert if it's a negative scale
   # invert if it's a negative scale
   if (high < low) {
     slice <- slice*-1
@@ -440,6 +437,7 @@ scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE) {
   else { 
     under <- 0
   }
+  
   slice[slice <= 0] <- under
   return(slice)
 }
