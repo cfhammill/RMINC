@@ -5,7 +5,7 @@ r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-p
 
 # System dependencies
 before_install:
- - sudo apt-get remove -y libhdf5-openmpi* libhdf5-mpich*
+ - sudo bash travis_install_packages.sh
  - sudo apt-get install -y libvtk5-dev
  - sudo apt-get install -y python-dev
  - sudo apt-get install -y python-vtk
