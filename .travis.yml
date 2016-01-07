@@ -6,7 +6,8 @@ r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-p
 # System dependencies
 before_install:
  # remove cran's apt repository to install hdf5
- - sudo add-apt-repository -r "deb https://cran.rstudio.com//bin/linux/ubuntu precise/"
+ - echo $(cat /etc/apt/sources.list | grep "deb https://cran.rstudio")
+ - sudo add-apt-repository -r $(cat /etc/apt/sources.list | grep "deb https://cran.rstudio")
  - sudo apt-get update -qq
  
  - sudo apt-get install -y libvtk5-dev
