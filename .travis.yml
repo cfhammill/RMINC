@@ -22,8 +22,6 @@ before_install:
  - sudo add-apt-repository -y "ppa:marutter/c2d4u"
  - sudo apt-get update -qq
 
-
-
 #Git Binary installs
 r_binary_install:
   - lme4
