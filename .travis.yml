@@ -10,7 +10,7 @@ before_install:
  - sudo apt-get install -y python-vtk
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
- - sudo bash dpkg_get_selections_script.sh
+ - sudo dpkg --get-selections
  - sudo apt-get install -y libhdf5-serial-dev
 
 #Git Binary installs
