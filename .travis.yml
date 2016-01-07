@@ -3,22 +3,22 @@ sudo: require
 cran: http://cran.rstudio.com/
 r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-path=$RMINC_BUILD_PATH"
 
-addons:
-  apt:
-      sources:
-          - ubuntu-toolchain-r-test
-	  - llvm-toolchain-precise
-	  - llvm-toolchain-precise-3.6
-
 # System dependencies
 before_install:
-# - sudo apt-get install -y aptitude
+ # remove cran's apt repository to install hdf5
+ - sudo add-apt-repository -r "deb https://cran.rstudio.com//bin/linux/ubuntu precise/"
+ - sudo apt-get update -qq
+ 
  - sudo apt-get install -y libvtk5-dev
  - sudo apt-get install -y python-dev
  - sudo apt-get install -y python-vtk
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
  - sudo aptitude install -y libhdf5-serial-dev
+ 
+ # Add it back for downstream stuff 
+ - sudo add-apt-repository "deb https://cran.rstudio.com//bin/linux/ubuntu precise/"
+ - sudo apt-get update -qq
 
 
 
