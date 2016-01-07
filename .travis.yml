@@ -6,12 +6,12 @@ r_build_args: --no-multiarch --with-keep.source --configure-args="--with-build-p
 # System dependencies
 before_install:
  - sudo apt-get install -y aptitude
+ - sudo aptitude install -y libhdf5-serial-dev
  - sudo apt-get install -y libvtk5-dev
  - sudo apt-get install -y python-dev
  - sudo apt-get install -y python-vtk
  - sudo apt-get install -y libssh2-1-dev
  - sudo apt-get install -y libcurl4-openssl-dev
- - sudo aptitude install -y libhdf5-serial-dev
 
 
 #Git Binary installs
