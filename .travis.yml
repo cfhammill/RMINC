@@ -16,6 +16,6 @@ r_github_packages:
 
 # Source/R installs
 install:
-  - sudo bash travis_install_scripts/install_libminc.sh
+  - sudo bash travis_install_scripts/install_minc_related.sh
   - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
   - Rscript travis_install_scripts/r_package_install.Rscript

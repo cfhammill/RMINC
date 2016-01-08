@@ -9,6 +9,8 @@ sudo apt-get install -y libvtk5-dev \
                         libssh2-1-dev \
                         libcurl4-openssl-dev \
                         libhdf5-serial-dev \
+                        bison \
+                        flex
 
  # Add them back for downstream stuff
  sudo add-apt-repository -y "deb http://cran.rstudio.com//bin/linux/ubuntu $(lsb_release -cs)/"
