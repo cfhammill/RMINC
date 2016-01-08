@@ -32,4 +32,5 @@ r_github_packages:
 # Source/R installs
 install:
   - sudo bash install_libminc.sh
+  - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
   - Rscript r_package_install.Rscript
