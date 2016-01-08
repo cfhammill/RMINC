@@ -11,6 +11,6 @@ cd ..
 git clone https://github.com/BIC-MNI/minc-tools
 mkdir minc-tools/build
 cd minc-tools/build
-cmake . -DLIBMINC_DIR=/usr/local/lib
+cmake .. -DLIBMINC_DIR=/usr/local/lib
 make
 sudo make install
