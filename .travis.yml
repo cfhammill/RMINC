@@ -13,7 +13,6 @@ r_binary_install:
 r_github_packages:
   - hadley/dplyr
   - hadley/ggplot2
-  - cfhammill/testthat
 
 # Source/R installs
 install:

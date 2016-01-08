@@ -3,3 +3,6 @@ install.packages(
   c("devtools",
     "qvalue",
     "covr"))
+
+library(devtools)
+install_github("cfhammill/testthat")
