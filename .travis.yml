@@ -4,7 +4,7 @@ cran: http://cran.rstudio.com/
 
 # System dependencies
 before_install:
- - sudo bash travis_install_scripts/install_apt_dependencies
+ - sudo bash travis_install_scripts/install_apt_dependencies.sh
 
 #Git Binary installs
 r_binary_install:
