@@ -9,7 +9,8 @@ sudo make install
 
 cd ..
 git clone https://github.com/BIC-MNI/minc-tools
-cd minc-tools
+mdir minc-tools/build
+cd minc-tools/build
 cmake . -DLIBMINC_DIR=/usr/local/lib
 make
 sudo make install
