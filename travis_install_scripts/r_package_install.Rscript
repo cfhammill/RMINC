@@ -1,6 +1,5 @@
 options(repos = c("http://cran.rstudio.com", "http://bioconductor.org/packages/3.2/bioc"))
 install.packages(
   c("devtools",
-    "testthat",
     "qvalue",
     "covr"))

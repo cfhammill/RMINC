@@ -6,6 +6,7 @@ sudo apt-get update -qq
 sudo apt-get install -y libvtk5-dev \
                         python-dev \
                         python-vtk \
+                        libssh2-1 \
                         libssh2-1-dev \
                         libcurl4-openssl-dev \
                         libhdf5-serial-dev \
