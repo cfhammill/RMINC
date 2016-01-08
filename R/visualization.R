@@ -361,21 +361,38 @@ mincImage <- function(volume, dimension=2, slice=NULL,
   sliceDims <- dim(s$slice)
   
   if(!add){
-    plot.new()
-    plot.window(xlim = c(0, sliceDims[1]),
-                ylim = c(0, sliceDims[2]))
+    plot.special <- #override plot.defaults defaults
+      function(..., xlab = "", ylab = "", asp = s$asp, 
+               xaxs = "i", yaxs = "i",
+               ps = ifelse(exists("axes") && axes, par("ps"), 1),
+               tck = ifelse(exists("axes") && axes, par("tck"), 0))
+        plot.default(..., xlab = xlab, ylab = ylab, asp = asp,
+                     xaxs = xaxs, yaxs = yaxs, 
+                     ps = ps, tck = tck)
+    
+    plot.special(
+      sliceDims[1], sliceDims[2], #dummy plot values
+      type = "n", #don't plot them
+      xlim = c(0, sliceDims[1]),
+      ylim = c(0, sliceDims[2]),
+      ...)
   }
   
   if(!all(is.na(s$slice))){
     colourDepth <- length(col)
     
+    #Scale the slice to span the colour depth
+    #Adding double epsilon keeps scale [0, colourDepth)
+    #necessary for floor(n) + 1 below to avoid IOB
     scaledSlice <- 
-      (s$slice - min(low,high)) / abs(high - low) * colourDepth
+      s$slice / 
+      (abs(high) + .Machine$double.eps) * 
+      colourDepth
     
     colourizedSlice <- 
       vapply(scaledSlice,
              function(n){
-               matchedCol <- col[ceiling(n)]
+               matchedCol <- col[floor(n) + 1] 
                if(length(matchedCol) != 1) return(NA_character_)
                return(matchedCol)
              }, character(1))
@@ -385,8 +402,7 @@ mincImage <- function(volume, dimension=2, slice=NULL,
     
     rasterImage(colourizedSlice, 
                 xleft = 0, xright = sliceDims[1],
-                ytop = 0, ybottom = sliceDims[2], 
-                ...)
+                ytop = 0, ybottom = sliceDims[2])
   }
   
   return(invisible(NULL))
@@ -411,8 +427,7 @@ mincContour <- function(volume, dimension=2, slice=NULL, ...) {
   contour(s$slice, asp=s$asp, ...)
 }
 
-scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE, 
-                       reverse = FALSE) {
+scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE) {
   if (is.null(low)) {
     low <- quantile(slice, 0.5)
   }
@@ -420,7 +435,6 @@ scaleSlice <- function(slice, low=NULL, high=NULL, underTransparent=TRUE,
     high <- quantile(slice, 0.7)
   }
   
-  # invert if it's a negative scale
   # invert if it's a negative scale
   if (high < low) {
     slice <- slice*-1
