@@ -446,6 +446,7 @@ vertexLmerEstimateDF <-
     return(model)
   }
 
+
 vertex_mlm <- 
   function(formula, data = NULL, mask = NULL){
     # Build model.frame
@@ -479,29 +480,104 @@ vertex_mlm <-
 prediction_error_mlm <- 
   function(mlm, newdata, response){
     
-    tt <- terms(mlm)
-    Terms <- delete.response(tt)
-    m <- model.frame(Terms, newdata, na.action = na.pass, 
-                     xlev = mlm$xlevels)
-    if (!is.null(cl <- attr(Terms, "dataClasses"))) 
-      .checkMFClasses(cl, m)
-    X <- model.matrix(Terms, m, contrasts.arg = mlm$contrasts)
-    offset <- rep(0, nrow(X))
-    if (!is.null(off.num <- attr(tt, "offset"))) 
-      for (i in off.num) offset <- offset + eval(attr(tt, 
-                                                      "variables")[[i + 1]], newdata)
-    if (!is.null(mlm$call$offset)) 
-      offset <- offset + eval(mlm$call$offset, newdata)
-    mmDone <- FALSE
+    ## Function for one row of newdata and one col of response
+    compute_resid <- function(predictors, responses){
+      tt <- terms(mlm)
+      Terms <- delete.response(tt)
+      m <- model.frame(Terms, predictors, na.action = na.pass, 
+                       xlev = mlm$xlevels)
+      if (!is.null(cl <- attr(Terms, "dataClasses"))) 
+        .checkMFClasses(cl, m)
+      X <- model.matrix(Terms, m, contrasts.arg = mlm$contrasts)
+      offset <- rep(0, nrow(X))
+      if (!is.null(off.num <- attr(tt, "offset"))) 
+        for (i in off.num) offset <- offset + eval(attr(tt, 
+                                                        "variables")[[i + 1]], predictors)
+      if (!is.null(mlm$call$offset)) 
+        offset <- offset + eval(mlm$call$offset, predictors)
+      mmDone <- FALSE
+      
+      n <- ncol(mlm$coefficients)
+      rank <- mlm$rank
+      to_rank <- seq_len(rank)
+      pivots <- qr(mlm)$pivot[to_rank]
+      coefs <- mlm$coefficients
+      resid_variance <- colSums(residuals(mlm)^2) / mlm$df.residual
+      xr_inv <- X[,pivots] %*% qr.solve(qr.R(qr(mlm)))[to_rank,to_rank]
+      preds <- vapply(seq_len(n), function(i) X[,pivots,drop = FALSE] %*% coefs[pivots,i], numeric(1))
+      pred_err <- vapply(resid_variance, function(var) sqrt(xr_inv^2 %*% rep(var, rank) + var), numeric(1))
+      data_frame(real = responses, pred = preds, pred_err = pred_err, std_pred = (real - pred) /pred_err)
+    }
     
-    n <- ncol(mlm$coefficients)
-    rank <- mlm$rank
-    to_rank <- seq_len(rank)
-    pivots <- qr(mlm)$pivot[to_rank]
-    coefs <- mlm$coefficients
-    resid_variance <- colSums(residuals(mlm)^2) / mlm$df.residual
-    xr_inv <- X[,pivots] %*% qr.solve(qr.R(qr(mlm)))[to_rank,to_rank]
-    preds <- vapply(seq_len(n), function(i) X[,pivots,drop = FALSE] %*% coefs[pivots,i], numeric(1))
-    pred_err <- vapply(resid_variance, function(var) sqrt(xr_inv^2 %*% rep(var, rank) + var), numeric(1))
-    data_frame(real = response, pred = preds, pred_err = pred_err, std_pred = (real - pred) /pred_err)
+    response <- as.matrix(response)
+    if(nrow(newdata) == 1 && ncol(response) != 1)
+      stop("too many columns of response variables specified")
+    
+    if(nrow(newdata) != ncol(response))
+      stop("dimension mismatch between newdata and response, nrow(newdata) must equal ncol(response)")
+    
+    lapply(seq_len(nrow(newdata)), function(i) compute_resid(newdata[i,], response[,i])) %>%
+      Reduce(rbind, ., NULL)
+  }
+
+loo_prediction_error <- 
+  function(formula, data = NULL,  mask = NULL, parallel = NULL){
+    m <- match.call()
+    mf <- match.call(expand.dots=FALSE)
+    m <- match(c("formula", "data", "subset"), names(mf), 0)
+    mf <- mf[c(1, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    files <- with(data, eval(formula[[2]])) #get LHS object
+    
+    ## Vertex tables
+    vertex_table <- vertexTable(files)
+    nvertices <- nrow(vertex_table)
+    
+    if(!is.null(mask)){
+      if(length(mask) == 1 && is.character(mask))
+        mask <- readLines(mask)
+      
+      mask_lgl <- mask > .5
+      vertex_table <- vertex_table[mask_lgl,]
+    }
+    
+    vertex_table <- t(vertex_table)
+    
+    get_loo_resid <- function(i){
+      # Build model.frame
+      formula[[2]] <- quote(vertex_table[-i,])
+      environment(formula) <- environment()
+      
+      big_lm <- lm(formula, data = data[-i,])
+      RMINC:::prediction_error_mlm(big_lm, data[i,], vertex_table[i,])$std_pred
+    }
+    
+    if(is.null(parallel)){
+      results <- sapply(seq_len(nrow(data)), get_loo_resid)
+    } else {
+      n_groups <- as.numeric(parallel[2])
+      groups <- split(seq_len(nrow(data)), groupingVector(nrow(data), n_groups))
+      
+      if(parallel[1] == "local") {
+        results <- 
+          quiet_mclapply(seq_len(nrow(data)), get_loo_resid, mc.cores = n_groups) %>%
+          Reduce(cbind, ., NULL)
+      } else {
+        reg <- makeRegistry("matrixApply_registry")
+        on.exit( tenacious_remove_registry(reg) )
+        
+        batchMap(reg, get_loo_resid, i = seq_len(nrow(data)))
+        
+        submitJobs(reg)
+        waitForJobs(reg)
+        
+        results <-
+          loadResults(reg, use.names = FALSE) %>%
+          Reduce(cbind, ., NULL)
+      }
+    }
+    
+    results
   }
