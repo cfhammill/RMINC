@@ -602,7 +602,7 @@ loo_prediction_error <-
         reg <- makeRegistry("matrixApply_registry")
         on.exit( tenacious_remove_registry(reg) )
         
-        batchExport(reg, vertex_table, data)
+        batchExport(reg, li = list(vertex_table = vertex_table, data = data))
         batchMap(reg, get_loo_resid, i = seq_len(nrow(data)))
         
         submitJobs(reg)
