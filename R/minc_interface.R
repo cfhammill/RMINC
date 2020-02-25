@@ -1374,7 +1374,7 @@ getRMINCTestData <- function(dataPath = getOption("RMINC_DATA_DIR", tempdir()), 
     lapply(filesToFix, rectifyPaths)
   }
   
-  invisible(NULL)
+  invisible(extractedPath)
 }
 
 #' Run function with/without output silenced
