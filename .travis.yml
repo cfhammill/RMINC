@@ -2,7 +2,13 @@ matrix:
   include:
     -  os: linux
        dist: trusty
+       script:
+         - R CMD build .
+         - R CMD check *.tar.gz --as-cran
     -  os: osx
+       script:
+         - R CMD build .
+         - R CMD check *.tar.gz --as-cran
 
 language: r
 sudo: required
