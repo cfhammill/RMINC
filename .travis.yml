@@ -33,6 +33,7 @@ before_install: |
      sudo hdiutil attach ../minc-toolkit-1.9.16-20180117-Darwin-10.8-x86_64.dmg
      sudo installer -package /Volumes/minc-toolkit-1.9.16-20180117-Darwin-x86_64/minc-toolkit-1.9.16-20180117-Darwin-x86_64.pkg -target /
      source /opt/minc/1.9.16/minc-toolkit-config.sh
+     brew install zlib
      Rscript -e "install.packages('digest')"
    fi
    
