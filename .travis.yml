@@ -13,6 +13,7 @@ r_binary_packages:
   - devtools
   - roxygen2
   - tidyverse
+  - lme4
 sudo: required
 addons:
   apt:
