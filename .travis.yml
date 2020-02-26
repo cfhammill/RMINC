@@ -3,7 +3,7 @@ matrix:
     -  os: linux
        dist: xenial
        script:
-         - Rscript -e 'devtools::install();devtools::test()'
+         - Rscript -e 'devtools::install(); devtools::test()'
     -  os: osx
        script:
          - Rscript -e 'devtools::install();devtools::test()'
@@ -39,9 +39,9 @@ before_install: |
      sudo hdiutil attach ../minc-toolkit-1.9.16-20180117-Darwin-10.8-x86_64.dmg
      sudo installer -package /Volumes/minc-toolkit-1.9.16-20180117-Darwin-x86_64/minc-toolkit-1.9.16-20180117-Darwin-x86_64.pkg -target /
      source /opt/minc/1.9.16/minc-toolkit-config.sh
-     echo $(brew --prefix zlib)
+     echo $(brew --prefix zlib) >&2
      export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$(brew --prefix zlib)/lib
-     # export DYLD_LIBRARY_PATH=/usr/lib:$DYLD_LIBRARY_PATH
+     export DYLD_LIBRARY_PATH=/usr/lib:$DYLD_LIBRARY_PATH
      Rscript -e "install.packages('digest')"
    fi
    
