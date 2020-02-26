@@ -17,7 +17,7 @@ sudo: required
 addons:
   apt:
     update: true
-    packages: libmesa-dev
+    packages: libgl1-mesa-dev
        
 before_install: |
    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
