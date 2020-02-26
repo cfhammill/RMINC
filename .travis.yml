@@ -3,14 +3,16 @@ matrix:
     -  os: linux
        dist: xenial
        script:
-         - R CMD build .
-         - R CMD check *.tar.gz --as-cran
+         - Rscript -e 'devtools::install();devtools::test()'
     -  os: osx
        script:
-         - R CMD build .
-         - R CMD check *.tar.gz --as-cran
+         - Rscript -e 'devtools::install();devtools::test()'
 
 language: r
+r_binary_packages:
+  - devtools
+  - roxygen2
+  - tidyverse
 sudo: required
        
 before_install: |
