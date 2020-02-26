@@ -23,8 +23,8 @@ addons:
       - libgl1-mesa-dev
       - libglu1-mesa-dev
       - freeglut3-dev
-# env:
-#   MINC_PATH=/opt/minc/1.9.17
+env:
+  MINC_PATH=/opt/minc/1.9.17
       
 before_install: |
    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
