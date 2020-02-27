@@ -2,11 +2,27 @@ matrix:
   include:
     -  os: linux
        dist: xenial
-       script:
-         - Rscript -e 'devtools::install(); devtools::test()'
+       script: |
+         R CMD build .
+         R CMD INSTALL RMINC*.tar.gz
+         R CMD check --as-cran --no-install RMINC*.tar.gz
+         Rscript -e "\
+         testr <- devtools::test(); \
+         testr <- as.data.frame(testr); \
+         if(any(testr\$error) || any(testr\$warning > 0)) \
+           stop('Found failing tests') \
+         "
     -  os: osx
-       script:
-         - Rscript -e 'devtools::install();devtools::test()'
+       script: |
+         R CMD build .
+         R CMD INSTALL RMINC*.tar.gz
+         R CMD check --as-cran --no-install RMINC*.tar.gz
+         Rscript -e "\
+         testr <- devtools::test(); \
+         testr <- as.data.frame(testr); \
+         if(any(testr\$error) || any(testr\$warning > 0)) \
+           stop('Found failing tests') \
+         "
 
 language: r
 r_binary_packages:
