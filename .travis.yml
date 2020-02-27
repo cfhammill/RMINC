@@ -40,17 +40,6 @@ before_install: |
      sudo installer -package /Volumes/minc-toolkit-1.9.16-20180117-Darwin-x86_64/minc-toolkit-1.9.16-20180117-Darwin-x86_64.pkg -target /
      source /opt/minc/1.9.16/minc-toolkit-config.sh
      export LDFLAGS="$LDFLAGS -L$(brew --prefix zlib)/lib"
-     #echo Brew loc >&2
-     #ls $(brew --prefix zlib) >&2
-     #echo Minc-toolkit >&2
-     #ls /opt/minc/1.9.16/lib >&2
-     #export PATH=$PWD:$PATH
-     #echo "" > h5cc
-     #chmod +x h5cc
-     #export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$(brew --prefix zlib)/lib
-     #export DYLD_LIBRARY_PATH=/usr/lib:$DYLD_LIBRARY_PATH
-     #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(brew --prefix zlib)/lib
-     #export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
      Rscript -e "install.packages('digest')"
    fi
    
